@@ -24,7 +24,7 @@ body{
 #keyboard{
     height:400px
 }
-.operator.number.empty{
+.operator, .number, .empty{
     width:50px;
     height:50px;
     margin:15px;
@@ -33,4 +33,36 @@ body{
     border-width: 0;
     font-weight: bold;
     font-size: 15px;
+}
+.number,.empty{
+background-color:lavenderblush;
+}
+.number,.operator{
+cursor: pointer;
+}
+.operator:active, .number:active{
+    font-size: 14px;
+}
+.operator:focus, .number:focus, .empty:focus{
+    outline: none;
+}
+button:nth-child(4){
+    font-size: 20px;
+    background-color: lightblue;
+}
+button:nth-child(8) {
+    font-size: 20px;
+    background-color:crimson;
+}
+button:nth-child(12) {
+    font-size: 20px;
+    background-color:slateblue;
+}
+button:nth-child(16) {
+    font-size: 20px;
+    background-color:lightskyblue;
+}
+button:nth-child(20) {
+    font-size: 20px;
+    background-color:green;
 }
