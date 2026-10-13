@@ -13,6 +13,16 @@ body{
     align-items: center;
     height: 100vh;
 }
+p{
+    text-align: center;
+    font-size: 20px;
+    color: white;
+}
+#entry-box{
+    text-align: center;
+    font-size: 20px;
+    color: white;
+}
 .calculator{
     width:420px;
     height:620px;

@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Apex Horizon Elite - Corporate Banking System</title>
+    <style>
+        :root {
+            --primary: #0b1329;
+            --sidebar-bg: #1c2541;
+            --accent-blue: #3a86ff;
+            --accent-green: #06d6a0;
+            --accent-red: #ef476f;
+            --text-dark: #1e293b;
+            --text-light: #64748b;
+            --bg-body: #f4f6fc;
+            --surface: #ffffff;
+            --border: #e2e8f0;
+            --radius: 12px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-body);
+            color: var(--text-dark);
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* ------------------ SIDEBAR STYLING ------------------ */
+        .sidebar {
+            width: 280px;
+            background-color: var(--sidebar-bg);
+            color: white;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 24px;
+            z-index: 10;
+        }
+
+        .brand-logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 22px;
+            font-weight: 800;
+            letter-spacing: 0.5px;
+            padding-bottom: 24px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .brand-logo span {
+            color: var(--accent-blue);
+        }
+
+        .nav-links {
+            list-style: none;
+            margin-top: 24px;
+            flex-grow: 1;
+        }
+
+        .nav-item {
+            padding: 14px 16px;
+            border-radius: var(--radius);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            color: #94a3b8;
+            font-weight: 500;
+            margin-bottom: 6px;
+            transition: all 0.2s ease;
+        }
+
+        .nav-item:hover,
+        .nav-item.active {
+            background-color: rgba(255, 255, 255, 0.08);
+            color: white;
+        }
+
+        .nav-item.active {
+            background-color: var(--accent-blue);
+            color: white;
+            font-weight: 600;
+        }
+
+        .user-panel {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .avatar {
+            width: 44px;
+            height: 44px;
+            background: linear-gradient(135deg, var(--accent-blue), #8338ec);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            color: white;
+        }
+
+        /* ------------------ MAIN CONTAINER ------------------ */
+        .main-workspace {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+        }
+
+        header {
+            background-color: var(--surface);
+            padding: 20px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .header-meta h1 {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .header-meta p {
+            font-size: 13px;
+            color: var(--text-light);
+            margin-top: 2px;
+        }
+
+        .security-badge {
+            background-color: rgba(6, 214, 160, 0.1);
+            color: var(--accent-green);
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .view-section {
+            padding: 40px;
+            max-width: 1300px;
+            width: 100%;
+            margin: 0 auto;
+            display: none;
+            /* Controlled dynamically by JS */
+        }
+
+        .view-section.active-view {
+            display: block;
+            animation: slideUp 0.3s ease-out;
+        }
+
+        /* ------------------ METRICS / CARDS ------------------ */
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 24px;
+            margin-bottom: 32px;
+        }
+
+        .card {
+            background-color: var(--surface);
+            border-radius: var(--radius);
+            padding: 24px;
+            border: 1px solid var(--border);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.02);
+        }
+
+        .card-premium {
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            color: white;
+            border: none;
+        }
+
+        .card-label {
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-light);
+        }
+
+        .card-premium .card-label {
+            color: #94a3b8;
+        }
+
+        .card-value {
+            font-size: 32px;
+            font-weight: 700;
+            margin: 12px 0;
+        }
+
+        .account-select {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            outline: none;
+        }
+
+        /* ------------------ OPERATION TERMINAL ------------------ */
+        .split-layout {
+            display: grid;
+            grid-template-columns: 1.6fr 1.1fr;
+            gap: 24px;
+        }
+
+        .panel-heading {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .tab-switch {
+            display: flex;
+            background-color: var(--bg-body);
+            padding: 4px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            background: transparent;
+            font-weight: 600;
+            color: var(--text-light);
+            cursor: pointer;
+            border-radius: 6px;
+            transition: all 0.2s;
+        }
+
+        .tab-btn.active {
+            background-color: var(--surface);
+            color: var(--accent-blue);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+
+        .field-group {
+            margin-bottom: 18px;
+        }
+
+        .field-group label {
+            display: block;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 6px;
+        }
+
+        .input-box {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 15px;
+            outline: none;
+            transition: border 0.2s;
+        }
+
+        .input-box:focus {
+            border-color: var(--accent-blue);
+        }
+
+        .btn-action {
+            width: 100%;
+            padding: 14px;
+            background-color: var(--accent-blue);
+            color: white;
+            font-weight: 700;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 15px;
+            transition: background 0.2s;
+        }
+
+        .btn-action:hover {
+            background-color: #1d4ed8;
+        }
+
+        /* LEDGER / TRANSACTION LOG */
+        .ledger-box {
+            max-height: 340px;
+            overflow-y: auto;
+            list-style: none;
+        }
+
+        .ledger-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .ledger-item:last-child {
+            border-bottom: none;
+        }
+
+        .tx-title {
+            font-weight: 600;
+            font-size: 14px;
+            display: block;
+        }
+
+        .tx-ts {
+            font-size: 12px;
+            color: var(--text-light);
+        }
+
+        .tx-amt {
+            font-weight: 700;
+            font-size: 14px;
+        }
+
+        .income {
+            color: var(--accent-green);
+        }
+
+        .expense {
+            color: var(--accent-red);
+        }
+
+        /* ------------------ SECURITY VIEW STYLING ------------------ */
+        .sec-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        #sec-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .sec-row:last-child {
+            border-bottom: none;
+        }
+
+        /* Toggle Switch */
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 48px;
+            height: 24px;
+        }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #cbd5e1;
+            transition: .3s;
+            border-radius: 24px;
+        }
+
+        input:checked+.slider {
+            background-color: var(--accent-green);
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 18px;
+            width: 18px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            transition: .3s;
+            border-radius: 50%;
+        }
+
+        input:checked+.slider:before {
+            transform: translateX(24px);
+        }
+
+        /* ------------------ GLOBAL NOTIFICATIONS ------------------ */
+        .toast-box {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            padding: 16px 24px;
+        }
+    </style>
+    </head>
+    <body>
+        <div class="sidebar">
+            <div>
+                <div class="brand-logo">
+                   🏦 <span>Apex</span> Bank
+                </div>
+                <ul class="nav-links">
+                    <li class="nav-item " data-view="dashboard">
+                        <span>📃Dashboard</span>
+                    </li>
+                    <li class="nav-item" data-view="transactions">
+                        <span>💳My cards</span>
+                    </li>              
+                    <li class="nav-item" data-view="security">
+                        <span>💵Amount</span>
+                    </li>
+                    <li class="nav-item" data-view="security">
+                        <span>📊Statistics</span>
+                    </li>
+                    <li class="nav-item" data-view="security">
+                        <span>🔐Security</span>
+                    </li>
+                    <li class="nav-item" data-view="security">
+                        <span>ℹ️About</span>
+                    </li>
+                </ul>
+            </div>
+            <div class="user-panel">
+                <div class="avatar">C</div>
+                <div>
+                    <div>Customer Name</div>
+                    <div style="font-size: 12px; color: #94a3b8;">
+                        customer@bank.com
+                    </div>
+                </div>
+            </div>
+        </div>
+        
